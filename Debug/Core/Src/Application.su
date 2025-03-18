@@ -1,0 +1,7 @@
+../Core/Src/Application.c:17:6:send_packet_data	24	static
+../Core/Src/Application.c:23:6:send_date_data	40	static
+../Core/Src/Application.c:33:6:send_time_data	24	static
+../Core/Src/Application.c:43:6:send_adc_data	24	static
+../Core/Src/Application.c:52:6:send_string_data	1048	static
+../Core/Src/Application.c:61:6:send_button_data	24	static
+../Core/Src/Application.c:70:6:send_temperature	24	static
