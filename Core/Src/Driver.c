@@ -7,13 +7,13 @@
 
 
 #include "Driver.h"
+#include "stm32f4xx_hal.h"
 
-uint16_t get_current_timestamp()
-{
-    return (uint16_t)HAL_GetTick();
-}
 
-void uart_send(uint8_t* data, uint16_t size)
+extern UART_HandleTypeDef huart2;
+
+
+void Driver_UART_Send(const uint8_t* data, size_t size)
 {
-    HAL_UART_Transmit(&huart2, data, size, 100);
+    HAL_UART_Transmit(&huart2, (uint8_t*)data, size, HAL_MAX_DELAY);
 }

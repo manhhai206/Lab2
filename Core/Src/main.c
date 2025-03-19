@@ -57,17 +57,8 @@ static void MX_USART2_UART_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-//void send_adc_data(uint32_t sample_count, uint16_t value)
-//{
-//    adc_stream_data_t adc_data;
-//    adc_data.sample_count = sample_count;
-//    adc_data.value = value;
-//
-//    packet_t packet;
-//    pack_packet(&packet,(uint8_t*)&adc_data, sizeof(adc_stream_data_t));
-//
-//    HAL_UART_Transmit(&huart2, (uint8_t*)&packet, sizeof(packet_t), HAL_MAX_DELAY);
-//}
+
+
 /* USER CODE END 0 */
 
 /**
@@ -101,7 +92,14 @@ int main(void)
   MX_GPIO_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
+  HAL_Delay(1000);
 
+
+  send_date_data(5, 10 , 2025);
+  send_time_data(12, 11, 10);
+  send_adc_data(55,200);
+  send_button_data(3, 1);
+  send_temperature(20);
   /* USER CODE END 2 */
 
 
@@ -109,9 +107,7 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    /* USER CODE END WHILE */
-//	  HAL_Delay(1000);
-//	  send_adc_data(55, 10);
+
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */

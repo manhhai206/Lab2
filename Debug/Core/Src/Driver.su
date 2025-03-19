@@ -1,2 +1,1 @@
-../Core/Src/Driver.c:11:10:get_current_timestamp	8	static
-../Core/Src/Driver.c:16:6:uart_send	16	static
+../Core/Src/Driver.c:16:6:Driver_UART_Send	16	static

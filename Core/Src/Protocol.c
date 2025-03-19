@@ -6,8 +6,9 @@
  */
 
 #include "Protocol.h"
-#include <string.h>
 #include "Driver.h"
+#include "Utils.h"
+#include <string.h>
 
 uint16_t calculate_crc16(uint8_t *data, uint16_t length)
 {
@@ -24,30 +25,43 @@ uint16_t calculate_crc16(uint8_t *data, uint16_t length)
     return crc;
 }
 
-void pack_packet(packet_t *packet, uint8_t *payload, uint16_t payload_length) {
-    packet->header = HEADER_BYTE;
-    packet->timestamp = get_current_timestamp();
-    packet->payload_size = payload_length;
-
-    for (uint16_t i = 0; i < payload_length; i++) {
-        packet->payload[i] = payload[i];
+void pack_packet(packet_t *packet, uint8_t *payload, uint16_t payload_length)
+{
+    if (packet == NULL || payload == NULL || payload_length > MAX_PAYLOAD_SIZE) {
+        return;
     }
 
-    packet->checksum = calculate_crc16((uint8_t*)packet, sizeof(packet_t) - sizeof(packet->checksum));
+    packet->header = ((uint16_t)HEADER_BYTE2 << 8) | HEADER_BYTE1;
+
+    packet->timestamp = (uint16_t)Driver_GetTimeMs();
+    packet->payload_size = payload_length;
+
+    memcpy(packet->payload, payload, payload_length);
+
+    uint16_t crc_length = sizeof(packet->header) + sizeof(packet->timestamp) + sizeof(packet->payload_size) + payload_length;
+    packet->checksum = calculate_crc16((uint8_t*)packet, crc_length);
+
 }
+
 
 void send_packet(packet_t *packet)
 {
-    uart_send((uint8_t*)&packet->header, sizeof(packet->header));
+    if (packet == NULL) {
+        return;
+    }
 
-    uart_send((uint8_t*)&packet->timestamp, sizeof(packet->timestamp));
+    uint16_t overhead_size = sizeof(packet->header) +
+                             sizeof(packet->timestamp) +
+                             sizeof(packet->payload_size);
+    Driver_UART_Send((uint8_t*)packet, overhead_size);
 
-    uart_send((uint8_t*)&packet->payload_size, sizeof(packet->payload_size));
+    Driver_UART_Send(packet->payload, packet->payload_size);
 
-    uart_send(packet->payload, packet->payload_size);
-
-    uart_send((uint8_t*)&packet->checksum, sizeof(packet->checksum));
+    Driver_UART_Send((uint8_t*)&(packet->checksum), sizeof(packet->checksum));
 }
+
+
+
 
 
 
