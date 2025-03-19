@@ -10,7 +10,7 @@
 
 #include <stdint.h>
 
-uint16_t Driver_GetTimeMs(void);
+uint32_t Driver_GetTimeMs(void);
 
 #endif /* INC_UTILS_H_ */
 

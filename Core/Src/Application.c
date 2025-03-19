@@ -5,6 +5,7 @@
  *      Author: MACH TRONG HAI
  */
 #include "Application.h"
+
 #include <string.h>
 
 static packet_t global_date_packet       = {0};
@@ -68,10 +69,8 @@ void send_string_data(uint16_t string_len, uint8_t *string)
     string_data.string_len = string_len;
     memcpy(string_data.string, string, string_len);
 
-    send_packet_data(&global_string_packet, &string_data, sizeof(uint16_t) + string_len);
+    send_packet_data(&global_string_packet, &string_data, sizeof(uint32_t) + sizeof(uint16_t) + string_len);
 }
-
-
 
 void send_button_data(uint8_t button_id, uint16_t button_state)
 {

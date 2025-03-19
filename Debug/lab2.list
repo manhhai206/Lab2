@@ -29,25 +29,25 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   ALLOC
  12 .ARM.attributes 00000030  00000000  00000000  0000400c  2**0
                   CONTENTS, READONLY
- 13 .debug_info   00008efd  00000000  00000000  0000403c  2**0
+ 13 .debug_info   00008f01  00000000  00000000  0000403c  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 14 .debug_abbrev 00001a6b  00000000  00000000  0000cf39  2**0
+ 14 .debug_abbrev 00001a69  00000000  00000000  0000cf3d  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  15 .debug_aranges 00000780  00000000  00000000  0000e9a8  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  16 .debug_rnglists 000005a5  00000000  00000000  0000f128  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_macro  000205d6  00000000  00000000  0000f6cd  2**0
+ 17 .debug_macro  000205d2  00000000  00000000  0000f6cd  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_line   0000a472  00000000  00000000  0002fca3  2**0
+ 18 .debug_line   0000a472  00000000  00000000  0002fc9f  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .debug_str    000c2549  00000000  00000000  0003a115  2**0
+ 19 .debug_str    000c2549  00000000  00000000  0003a111  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 20 .comment      00000043  00000000  00000000  000fc65e  2**0
+ 20 .comment      00000043  00000000  00000000  000fc65a  2**0
                   CONTENTS, READONLY
- 21 .debug_frame  00001cc8  00000000  00000000  000fc6a4  2**2
+ 21 .debug_frame  00001cc8  00000000  00000000  000fc6a0  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 22 .debug_line_str 0000003b  00000000  00000000  000fe36c  2**0
+ 22 .debug_line_str 0000003b  00000000  00000000  000fe368  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -404,7 +404,7 @@ void send_date_data(uint32_t days, uint32_t month, uint32_t year)
     date_stream_data_t date_data;
     date_data.data_id =  DATE_STREAM_DATA_ID;
  8000500:	2301      	movs	r3, #1
- 8000502:	613b      	str	r3, [r7, #16]
+ 8000502:	743b      	strb	r3, [r7, #16]
     date_data.days = days;
  8000504:	68fb      	ldr	r3, [r7, #12]
  8000506:	617b      	str	r3, [r7, #20]
@@ -434,7 +434,7 @@ void send_date_data(uint32_t days, uint32_t month, uint32_t year)
 void send_time_data(uint8_t hour, uint16_t minute, uint16_t second)
 {
  800052c:	b580      	push	{r7, lr}
- 800052e:	b086      	sub	sp, #24
+ 800052e:	b084      	sub	sp, #16
  8000530:	af00      	add	r7, sp, #0
  8000532:	4603      	mov	r3, r0
  8000534:	71fb      	strb	r3, [r7, #7]
@@ -445,26 +445,26 @@ void send_time_data(uint8_t hour, uint16_t minute, uint16_t second)
     time_stream_data_t time_data;
     time_data.data_id =  TIME_STREAM_DATA_ID;
  800053e:	2302      	movs	r3, #2
- 8000540:	60fb      	str	r3, [r7, #12]
+ 8000540:	723b      	strb	r3, [r7, #8]
     time_data.hour = hour;
  8000542:	79fb      	ldrb	r3, [r7, #7]
- 8000544:	743b      	strb	r3, [r7, #16]
+ 8000544:	727b      	strb	r3, [r7, #9]
     time_data.minute = minute;
  8000546:	88bb      	ldrh	r3, [r7, #4]
- 8000548:	827b      	strh	r3, [r7, #18]
+ 8000548:	817b      	strh	r3, [r7, #10]
     time_data.second = second;
  800054a:	887b      	ldrh	r3, [r7, #2]
- 800054c:	82bb      	strh	r3, [r7, #20]
+ 800054c:	81bb      	strh	r3, [r7, #12]
 
     send_packet_data(&global_time_packet, &time_data, sizeof(time_stream_data_t));
- 800054e:	f107 030c 	add.w	r3, r7, #12
- 8000552:	220c      	movs	r2, #12
+ 800054e:	f107 0308 	add.w	r3, r7, #8
+ 8000552:	2206      	movs	r2, #6
  8000554:	4619      	mov	r1, r3
  8000556:	4803      	ldr	r0, [pc, #12]	@ (8000564 <send_time_data+0x38>)
  8000558:	f7ff ffae 	bl	80004b8 <send_packet_data>
 }
  800055c:	bf00      	nop
- 800055e:	3718      	adds	r7, #24
+ 800055e:	3710      	adds	r7, #16
  8000560:	46bd      	mov	sp, r7
  8000562:	bd80      	pop	{r7, pc}
  8000564:	20000430 	.word	0x20000430
@@ -482,7 +482,7 @@ void send_adc_data(uint32_t sample_count, uint16_t value)
     adc_stream_data_t adc_data;
     adc_data.data_id = ADC_STREAM_DATA_ID;
  8000574:	2303      	movs	r3, #3
- 8000576:	60fb      	str	r3, [r7, #12]
+ 8000576:	733b      	strb	r3, [r7, #12]
     adc_data.sample_count = sample_count;
  8000578:	687b      	ldr	r3, [r7, #4]
  800057a:	613b      	str	r3, [r7, #16]
@@ -505,9 +505,9 @@ void send_adc_data(uint32_t sample_count, uint16_t value)
  8000598:	20000838 	.word	0x20000838
 
 0800059c <send_button_data>:
+
+    send_packet_data(&global_string_packet, &string_data, sizeof(uint32_t) + sizeof(uint16_t) + string_len);
 }
-
-
 
 void send_button_data(uint8_t button_id, uint16_t button_state)
 {
@@ -522,17 +522,17 @@ void send_button_data(uint8_t button_id, uint16_t button_state)
     button_state_data_t button_data;
     button_data.data_id = BUTTON_STATE_DATA_ID;
  80005ac:	2305      	movs	r3, #5
- 80005ae:	60bb      	str	r3, [r7, #8]
+ 80005ae:	733b      	strb	r3, [r7, #12]
     button_data.button_id = button_id;
  80005b0:	79fb      	ldrb	r3, [r7, #7]
- 80005b2:	733b      	strb	r3, [r7, #12]
+ 80005b2:	737b      	strb	r3, [r7, #13]
     button_data.button_state = button_state;
  80005b4:	88bb      	ldrh	r3, [r7, #4]
  80005b6:	81fb      	strh	r3, [r7, #14]
 
     send_packet_data(&global_button_packet, &button_data, sizeof(button_state_data_t));
- 80005b8:	f107 0308 	add.w	r3, r7, #8
- 80005bc:	2208      	movs	r2, #8
+ 80005b8:	f107 030c 	add.w	r3, r7, #12
+ 80005bc:	2204      	movs	r2, #4
  80005be:	4619      	mov	r1, r3
  80005c0:	4803      	ldr	r0, [pc, #12]	@ (80005d0 <send_button_data+0x34>)
  80005c2:	f7ff ff79 	bl	80004b8 <send_packet_data>
@@ -556,14 +556,14 @@ void send_temperature(uint16_t mcu_temperature_in_c)
     mcu_temperature_data_t temperature_data;
     temperature_data.data_id  = MCU_TEMPERATURE_DATA_ID;
  80005de:	2306      	movs	r3, #6
- 80005e0:	60bb      	str	r3, [r7, #8]
+ 80005e0:	733b      	strb	r3, [r7, #12]
     temperature_data.mcu_temperature_in_c = mcu_temperature_in_c;
  80005e2:	88fb      	ldrh	r3, [r7, #6]
- 80005e4:	81bb      	strh	r3, [r7, #12]
+ 80005e4:	81fb      	strh	r3, [r7, #14]
 
     send_packet_data(&global_temperature_packet, &temperature_data, sizeof(mcu_temperature_data_t));
- 80005e6:	f107 0308 	add.w	r3, r7, #8
- 80005ea:	2208      	movs	r2, #8
+ 80005e6:	f107 030c 	add.w	r3, r7, #12
+ 80005ea:	2204      	movs	r2, #4
  80005ec:	4619      	mov	r1, r3
  80005ee:	4803      	ldr	r0, [pc, #12]	@ (80005fc <send_temperature+0x28>)
  80005f0:	f7ff ff62 	bl	80004b8 <send_packet_data>
@@ -602,9 +602,9 @@ void Driver_UART_Send(const uint8_t* data, size_t size)
  8000624:	20001450 	.word	0x20001450
 
 08000628 <calculate_crc16>:
+#include <string.h>
 #include "Driver.h"
 #include "Utils.h"
-#include <string.h>
 
 uint16_t calculate_crc16(uint8_t *data, uint16_t length)
 {
@@ -718,7 +718,7 @@ void pack_packet(packet_t *packet, uint8_t *payload, uint16_t payload_length)
     packet->timestamp = (uint16_t)Driver_GetTimeMs();
  80006d6:	f000 f843 	bl	8000760 <Driver_GetTimeMs>
  80006da:	4603      	mov	r3, r0
- 80006dc:	461a      	mov	r2, r3
+ 80006dc:	b29a      	uxth	r2, r3
  80006de:	68fb      	ldr	r3, [r7, #12]
  80006e0:	805a      	strh	r2, [r3, #2]
     packet->payload_size = payload_length;
@@ -808,89 +808,89 @@ void send_packet(packet_t *packet)
  800075e:	bd80      	pop	{r7, pc}
 
 08000760 <Driver_GetTimeMs>:
-
 #include "Utils.h"
+
 #include "stm32f4xx_hal.h"
 
-uint16_t Driver_GetTimeMs(void)
+uint32_t Driver_GetTimeMs(void)
 {
  8000760:	b580      	push	{r7, lr}
  8000762:	af00      	add	r7, sp, #0
-    return (uint16_t)HAL_GetTick();
+    return HAL_GetTick();
  8000764:	f000 fa40 	bl	8000be8 <HAL_GetTick>
  8000768:	4603      	mov	r3, r0
- 800076a:	b29b      	uxth	r3, r3
 }
- 800076c:	4618      	mov	r0, r3
- 800076e:	bd80      	pop	{r7, pc}
+ 800076a:	4618      	mov	r0, r3
+ 800076c:	bd80      	pop	{r7, pc}
 
-08000770 <main>:
+0800076e <main>:
 /**
   * @brief  The application entry point.
   * @retval int
   */
 int main(void)
 {
- 8000770:	b580      	push	{r7, lr}
- 8000772:	af00      	add	r7, sp, #0
+ 800076e:	b580      	push	{r7, lr}
+ 8000770:	af00      	add	r7, sp, #0
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
   HAL_Init();
- 8000774:	f000 f9d2 	bl	8000b1c <HAL_Init>
+ 8000772:	f000 f9d3 	bl	8000b1c <HAL_Init>
   /* USER CODE BEGIN Init */
 
   /* USER CODE END Init */
 
   /* Configure the system clock */
   SystemClock_Config();
- 8000778:	f000 f820 	bl	80007bc <SystemClock_Config>
+ 8000776:	f000 f821 	bl	80007bc <SystemClock_Config>
   /* USER CODE BEGIN SysInit */
 
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
- 800077c:	f000 f8b2 	bl	80008e4 <MX_GPIO_Init>
+ 800077a:	f000 f8b3 	bl	80008e4 <MX_GPIO_Init>
   MX_USART2_UART_Init();
- 8000780:	f000 f886 	bl	8000890 <MX_USART2_UART_Init>
+ 800077e:	f000 f887 	bl	8000890 <MX_USART2_UART_Init>
   /* USER CODE BEGIN 2 */
   HAL_Delay(1000);
- 8000784:	f44f 707a 	mov.w	r0, #1000	@ 0x3e8
- 8000788:	f000 fa3a 	bl	8000c00 <HAL_Delay>
+ 8000782:	f44f 707a 	mov.w	r0, #1000	@ 0x3e8
+ 8000786:	f000 fa3b 	bl	8000c00 <HAL_Delay>
 
 
   send_date_data(5, 10 , 2025);
- 800078c:	f240 72e9 	movw	r2, #2025	@ 0x7e9
- 8000790:	210a      	movs	r1, #10
- 8000792:	2005      	movs	r0, #5
- 8000794:	f7ff feae 	bl	80004f4 <send_date_data>
+ 800078a:	f240 72e9 	movw	r2, #2025	@ 0x7e9
+ 800078e:	210a      	movs	r1, #10
+ 8000790:	2005      	movs	r0, #5
+ 8000792:	f7ff feaf 	bl	80004f4 <send_date_data>
   send_time_data(12, 11, 10);
- 8000798:	220a      	movs	r2, #10
- 800079a:	210b      	movs	r1, #11
- 800079c:	200c      	movs	r0, #12
- 800079e:	f7ff fec5 	bl	800052c <send_time_data>
+ 8000796:	220a      	movs	r2, #10
+ 8000798:	210b      	movs	r1, #11
+ 800079a:	200c      	movs	r0, #12
+ 800079c:	f7ff fec6 	bl	800052c <send_time_data>
   send_adc_data(55,200);
- 80007a2:	21c8      	movs	r1, #200	@ 0xc8
- 80007a4:	2037      	movs	r0, #55	@ 0x37
- 80007a6:	f7ff fedf 	bl	8000568 <send_adc_data>
+ 80007a0:	21c8      	movs	r1, #200	@ 0xc8
+ 80007a2:	2037      	movs	r0, #55	@ 0x37
+ 80007a4:	f7ff fee0 	bl	8000568 <send_adc_data>
   send_button_data(3, 1);
- 80007aa:	2101      	movs	r1, #1
- 80007ac:	2003      	movs	r0, #3
- 80007ae:	f7ff fef5 	bl	800059c <send_button_data>
+ 80007a8:	2101      	movs	r1, #1
+ 80007aa:	2003      	movs	r0, #3
+ 80007ac:	f7ff fef6 	bl	800059c <send_button_data>
   send_temperature(20);
- 80007b2:	2014      	movs	r0, #20
- 80007b4:	f7ff ff0e 	bl	80005d4 <send_temperature>
+ 80007b0:	2014      	movs	r0, #20
+ 80007b2:	f7ff ff0f 	bl	80005d4 <send_temperature>
   /* USER CODE END 2 */
 
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
- 80007b8:	bf00      	nop
- 80007ba:	e7fd      	b.n	80007b8 <main+0x48>
+ 80007b6:	bf00      	nop
+ 80007b8:	e7fd      	b.n	80007b6 <main+0x48>
+	...
 
 080007bc <SystemClock_Config>:
 /**
@@ -1626,7 +1626,7 @@ LoopFillZerobss:
  8000af6:	f002 f849 	bl	8002b8c <__libc_init_array>
 /* Call the application's entry point.*/
   bl  main
- 8000afa:	f7ff fe39 	bl	8000770 <main>
+ 8000afa:	f7ff fe38 	bl	800076e <main>
   bx  lr    
  8000afe:	4770      	bx	lr
   ldr   sp, =_estack     /* set stack pointer */

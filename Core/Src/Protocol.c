@@ -6,9 +6,9 @@
  */
 
 #include "Protocol.h"
+#include <string.h>
 #include "Driver.h"
 #include "Utils.h"
-#include <string.h>
 
 uint16_t calculate_crc16(uint8_t *data, uint16_t length)
 {

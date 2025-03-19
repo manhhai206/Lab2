@@ -8,7 +8,7 @@
 #ifndef INC_APPLICATION_H_
 #define INC_APPLICATION_H_
 
-#include "Protocol.h"
+#include <Protocol.h>
 #include <stdint.h>
 
 typedef enum {
@@ -33,7 +33,7 @@ typedef enum {
 
 typedef struct
 {
-	uint32_t data_id;
+	uint8_t data_id;
     uint32_t days;
     uint32_t month;
     uint32_t year;
@@ -41,7 +41,7 @@ typedef struct
 
 typedef struct
 {
-	uint32_t data_id;
+	uint8_t data_id;
     uint8_t hour;
     uint16_t minute;
     uint16_t second;
@@ -49,28 +49,28 @@ typedef struct
 
 typedef struct
 {
-	uint32_t data_id;
+	uint8_t data_id;
 	uint32_t sample_count;
 	uint16_t value;
 } adc_stream_data_t;
 
 typedef struct
 {
-	uint32_t data_id;
+	uint8_t data_id;
     uint16_t string_len;
     uint8_t string[1024];
 } hello_world_stream_data_t;
 
 typedef struct
 {
-	uint32_t data_id;
+	uint8_t data_id;
     uint8_t button_id;
     uint16_t button_state;
 } button_state_data_t;
 
 typedef struct
 {
-	uint32_t data_id;
+	uint8_t data_id;
     uint16_t mcu_temperature_in_c;
 } mcu_temperature_data_t;
 
