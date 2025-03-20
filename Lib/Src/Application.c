@@ -50,7 +50,6 @@ void send_date_data(uint32_t days, uint32_t month, uint32_t year)
     date_data.year = year;
 
     send_packet_data(&global_date_packet, &date_data, sizeof(date_stream_data_t));
-    Protocol_SetDataFrequency(date_stream_data_rate_hz);
 }
 
 
@@ -69,7 +68,6 @@ void send_time_data(uint8_t hour, uint16_t minute, uint16_t second)
     time_data.second = second;
 
     send_packet_data(&global_time_packet, &time_data, sizeof(time_stream_data_t));
-    Protocol_SetDataFrequency(time_stream_data_rate_hz);
 }
 
 
@@ -86,7 +84,6 @@ void send_adc_data(uint32_t sample_count, uint16_t value)
     adc_data.value = value;
 
     send_packet_data(&global_adc_packet, &adc_data, sizeof(adc_stream_data_t));
-    Protocol_SetDataFrequency(adc_stream_data_rate_hz);
 }
 
 
@@ -112,8 +109,6 @@ void send_string_data(uint16_t string_len, uint8_t *string)
 
     send_packet_data(&global_string_packet, &string_data,
                      sizeof(string_data.data_id) + sizeof(string_data.string_len) + string_len);
-
-    Protocol_SetDataFrequency(hello_world_data_rate_hz);
 }
 
 
@@ -130,7 +125,6 @@ void send_button_data(uint8_t button_id, uint16_t button_state)
     button_data.button_state = button_state;
 
     send_packet_data(&global_button_packet, &button_data, sizeof(button_state_data_t));
-    Protocol_SetDataFrequency(button_state_data_rate_hz);
 }
 
 
@@ -145,5 +139,4 @@ void send_temperature(uint16_t mcu_temperature_in_c)
     temperature_data.mcu_temperature_in_c = mcu_temperature_in_c;
 
     send_packet_data(&global_temperature_packet, &temperature_data, sizeof(mcu_temperature_data_t));
-    Protocol_SetDataFrequency(mcu_temperature_data_rate_hz);
 }
