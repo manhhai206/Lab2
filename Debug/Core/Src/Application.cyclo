@@ -1,7 +1,7 @@
 ../Core/Src/Application.c:18:6:send_packet_data	4
 ../Core/Src/Application.c:29:6:send_date_data	1
-../Core/Src/Application.c:40:6:send_time_data	1
-../Core/Src/Application.c:51:6:send_adc_data	1
-../Core/Src/Application.c:61:6:send_string_data	2
-../Core/Src/Application.c:75:6:send_button_data	1
-../Core/Src/Application.c:85:6:send_temperature	1
+../Core/Src/Application.c:41:6:send_time_data	1
+../Core/Src/Application.c:53:6:send_adc_data	1
+../Core/Src/Application.c:63:6:send_string_data	2
+../Core/Src/Application.c:77:6:send_button_data	1
+../Core/Src/Application.c:87:6:send_temperature	1

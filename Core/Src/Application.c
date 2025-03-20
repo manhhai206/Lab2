@@ -5,7 +5,7 @@
  *      Author: MACH TRONG HAI
  */
 #include "Application.h"
-
+#include "Utils.h"
 #include <string.h>
 
 static packet_t global_date_packet       = {0};
@@ -34,6 +34,7 @@ void send_date_data(uint32_t days, uint32_t month, uint32_t year)
     date_data.month = month;
     date_data.year = year;
 
+
     send_packet_data(&global_date_packet, &date_data, sizeof(date_stream_data_t));
 }
 
@@ -44,6 +45,7 @@ void send_time_data(uint8_t hour, uint16_t minute, uint16_t second)
     time_data.hour = hour;
     time_data.minute = minute;
     time_data.second = second;
+
 
     send_packet_data(&global_time_packet, &time_data, sizeof(time_stream_data_t));
 }

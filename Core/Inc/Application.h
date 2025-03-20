@@ -31,48 +31,45 @@ typedef enum {
 } freq_t;
 
 
-typedef struct
-{
-	uint8_t data_id;
+#pragma pack(push, 1)
+typedef struct {
+    uint8_t  data_id;
     uint32_t days;
     uint32_t month;
     uint32_t year;
 } date_stream_data_t;
 
-typedef struct
-{
-	uint8_t data_id;
-    uint8_t hour;
+typedef struct {
+    uint8_t  data_id;
+    uint8_t  hour;
     uint16_t minute;
     uint16_t second;
 } time_stream_data_t;
 
-typedef struct
-{
-	uint8_t data_id;
-	uint32_t sample_count;
-	uint16_t value;
+typedef struct {
+    uint8_t  data_id;
+    uint32_t sample_count;
+    uint16_t value;
 } adc_stream_data_t;
 
-typedef struct
-{
-	uint8_t data_id;
+typedef struct {
+    uint8_t  data_id;
     uint16_t string_len;
-    uint8_t string[1024];
+    uint8_t  string[1024];
 } hello_world_stream_data_t;
 
-typedef struct
-{
-	uint8_t data_id;
-    uint8_t button_id;
+typedef struct {
+    uint8_t  data_id;
+    uint8_t  button_id;
     uint16_t button_state;
 } button_state_data_t;
 
-typedef struct
-{
-	uint8_t data_id;
+typedef struct {
+    uint8_t  data_id;
     uint16_t mcu_temperature_in_c;
 } mcu_temperature_data_t;
+#pragma pack(pop)
+
 
 void send_packet_data(packet_t* packet, void* data, uint16_t data_size);
 void send_date_data(uint32_t days,uint32_t month, uint32_t year);

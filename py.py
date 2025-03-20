@@ -63,31 +63,31 @@ def decode_frame(buffer: bytearray):
 
 def check_and_decode_data(frame: dict):
     """
-    Giải mã payload dựa trên data_id (4 byte đầu của payload) với định dạng mới.
+    Giải mã payload dựa trên data_id (1 byte đầu của payload) với định dạng mới (data_id là 8-bit).
     
     Các định dạng:
-      - Date Data (data_id=1): 16 byte → [data_id (4), days (4), month (4), year (4)]
-      - Time Data (data_id=2): 9 byte  → [data_id (4), hour (1), minute (2), second (2)]
-      - ADC Data (data_id=3): 10 byte → [data_id (4), value (2), sample_count (4)]
-      - String Data (data_id=4): (4 + 2 + string_len) byte → [data_id (4), string_len (2), string (string_len)]
-      - Button Data (data_id=5): 7 byte → [data_id (4), button_id (1), button_state (2)]
-      - Temperature Data (data_id=6): 6 byte → [data_id (4), mcu_temperature_in_c (2)]
+      - Date Data (data_id=1): 13 byte → [data_id (1), days (4), month (4), year (4)]
+      - Time Data (data_id=2): 6 byte  → [data_id (1), hour (1), minute (2), second (2)]
+      - ADC Data (data_id=3): 7 byte   → [data_id (1), sample_count (4), value (2)]
+      - String Data (data_id=4): (1 + 2 + string_len) byte → [data_id (1), string_len (2), string (string_len)]
+      - Button Data (data_id=5): 4 byte → [data_id (1), button_id (1), button_state (2)]
+      - Temperature Data (data_id=6): 3 byte → [data_id (1), mcu_temperature_in_c (2)]
     """
     payload_bytes = frame["payload"]
     ps = frame["payload_size"]
-    if ps < 4:
-        print("Payload không chứa đủ data_id (4 byte).")
+    if ps < 1:
+        print("Payload không chứa đủ data_id (1 byte).")
         return
 
-    # Đọc 4 byte đầu của payload làm data_id (little-endian)
-    data_id = int.from_bytes(payload_bytes[0:4], byteorder='little')
+    # Đọc 1 byte đầu của payload làm data_id
+    data_id = payload_bytes[0]
     print("Data ID:", data_id)
     
     if data_id == 1:
-        if ps == 16:
+        if ps == 13:
             try:
-                # Date Data: data_id (4), days (4), month (4), year (4)
-                unpacked = struct.unpack('<IIII', payload_bytes[0:16])
+                # Date Data: data_id (1), days (4), month (4), year (4)
+                unpacked = struct.unpack('<BIII', payload_bytes[0:13])
                 print("Decoded Date Data:")
                 print("  Days:", unpacked[1])
                 print("  Month:", unpacked[2])
@@ -95,12 +95,12 @@ def check_and_decode_data(frame: dict):
             except Exception as e:
                 print("Error decoding Date Data:", e)
         else:
-            print("Expected payload size 16 for Date Data, got", ps)
+            print("Expected payload size 13 for Date Data, got", ps)
     elif data_id == 2:
-        if ps == 9:
+        if ps == 6:
             try:
-                # Time Data: data_id (4), hour (1), minute (2), second (2)
-                unpacked = struct.unpack('<IBHH', payload_bytes[0:9])
+                # Time Data: data_id (1), hour (1), minute (2), second (2)
+                unpacked = struct.unpack('<BBHH', payload_bytes[0:6])
                 print("Decoded Time Data:")
                 print("  Hour:", unpacked[1])
                 print("  Minute:", unpacked[2])
@@ -108,60 +108,62 @@ def check_and_decode_data(frame: dict):
             except Exception as e:
                 print("Error decoding Time Data:", e)
         else:
-            print("Expected payload size 9 for Time Data, got", ps)
+            print("Expected payload size 6 for Time Data, got", ps)
     elif data_id == 3:
-        if ps == 10:
+        if ps == 7:
             try:
-                # ADC Data: data_id (4), value (2), sample_count (4)
-                unpacked = struct.unpack('<IHI', payload_bytes[0:10])
+                # ADC Data: data_id (1), sample_count (4), value (2)
+                unpacked = struct.unpack('<BIH', payload_bytes[0:7])
                 print("Decoded ADC Data:")
-                print("  Value:", unpacked[1])
-                print("  Sample Count:", unpacked[2])
+                print("  Sample Count:", unpacked[1])
+                print("  Value:", unpacked[2])
             except Exception as e:
                 print("Error decoding ADC Data:", e)
         else:
-            print("Expected payload size 10 for ADC Data, got", ps)
+            print("Expected payload size 7 for ADC Data, got", ps)
     elif data_id == 4:
-        if ps < 6:
+        if ps < 3:
             print("Payload too small for String Data.")
         else:
             try:
-                string_len = int.from_bytes(payload_bytes[4:6], byteorder='little')
-                expected_size = 4 + 2 + string_len
+                # String Data: data_id (1), string_len (2), string (string_len)
+                string_len = int.from_bytes(payload_bytes[1:3], byteorder='little')
+                expected_size = 1 + 2 + string_len
                 if ps != expected_size:
                     print("Expected payload size for String Data:", expected_size, "got", ps)
                 else:
-                    string_data = payload_bytes[6:6+string_len]
+                    string_data = payload_bytes[3:3+string_len]
                     print("Decoded String Data:")
                     print("  String Length:", string_len)
                     print("  String:", string_data.decode('utf-8', errors='replace'))
             except Exception as e:
                 print("Error decoding String Data:", e)
     elif data_id == 5:
-        if ps == 7:
+        if ps == 4:
             try:
-                # Button Data: data_id (4), button_id (1), button_state (2)
-                unpacked = struct.unpack('<I B H', payload_bytes[0:7])
+                # Button Data: data_id (1), button_id (1), button_state (2)
+                unpacked = struct.unpack('<BBH', payload_bytes[0:4])
                 print("Decoded Button Data:")
                 print("  Button ID:", unpacked[1])
                 print("  Button State:", unpacked[2])
             except Exception as e:
                 print("Error decoding Button Data:", e)
         else:
-            print("Expected payload size 7 for Button Data, got", ps)
+            print("Expected payload size 4 for Button Data, got", ps)
     elif data_id == 6:
-        if ps == 6:
+        if ps == 3:
             try:
-                # Temperature Data: data_id (4), mcu_temperature_in_c (2)
-                unpacked = struct.unpack('<I H', payload_bytes[0:6])
+                # Temperature Data: data_id (1), mcu_temperature_in_c (2)
+                unpacked = struct.unpack('<BH', payload_bytes[0:3])
                 print("Decoded Temperature Data:")
                 print("  MCU Temperature (°C):", unpacked[1])
             except Exception as e:
                 print("Error decoding Temperature Data:", e)
         else:
-            print("Expected payload size 6 for Temperature Data, got", ps)
+            print("Expected payload size 3 for Temperature Data, got", ps)
     else:
         print("Unrecognized data type or payload size mismatch.")
+
 
 def main():
     uart_port = "COM6"
